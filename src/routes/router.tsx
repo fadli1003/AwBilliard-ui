@@ -14,7 +14,7 @@ const router = createBrowserRouter([
     element: <DefaultLayout />,
     children: [
       {
-        path: '/',
+        path: '/entah',
         element: <Navigate to="/users" />
       },
       {

@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 
-// Ignore CSS imports
+// Ignore CSS imports err from lint
 declare module '*.css' {
   const content: Record<string, string>;
   export default content;

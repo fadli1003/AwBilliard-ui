@@ -8,14 +8,14 @@ interface ContextType{
 
 }
 
-const stateContext = createContext<ContextType>({
+const authContext = createContext<ContextType>({
   user: null,
   token: null,
   setUser: () => {},
   setToken: () => {}
 })
 
-export const ContextProvider = ({children}: { children: React.ReactNode}) => {
+export const AuthContextProvider = ({children}: { children: React.ReactNode}) => {
   const [user, setUser] = useState({})
   const [token, _setToken] = useState(localStorage.getItem('ACCESS_TOKEN'))
 
@@ -29,13 +29,13 @@ export const ContextProvider = ({children}: { children: React.ReactNode}) => {
   }
 
   return (
-    <stateContext.Provider value={{
+    <authContext.Provider value={{
       user,
       token,
       setToken,
       setUser
-    }}>{children}</stateContext.Provider>
+    }}>{children}</authContext.Provider>
   )
 }
 
-export const useStateContext = () => useContext(stateContext)
+export const useAuthContext = () => useContext(authContext)
