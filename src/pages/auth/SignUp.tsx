@@ -1,89 +1,153 @@
-import React, { useState } from "react"
-import baseAPI from "../../utils/api";
-import { AxiosError } from "axios";
-import { useNavigate } from "react-router-dom";
-import { useAuthContext } from "../../context/ContextProvider";
+import React, { useState } from 'react';
+import baseAPI from '../../utils/api';
+import { AxiosError } from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../../context/ContextProvider';
+import Title from '../../components/Title';
 
-const emptyForm = { name: '', email: '', phone: '', password: '', password_confirmation: '' };
+const emptyForm = { 
+  name: '', 
+  email: '', 
+  phone: '', 
+  password: '', 
+  password_confirmation: '' 
+};
 
 const SignUp = () => {
-  const [form, setForm] = useState<AuthFormState>(emptyForm)
-  const [loading, setIsLoading] = useState(false)
-  const [errors, setErrors] = useState<any>()
-  const {setUser, setToken} = useAuthContext()
-  const navigate = useNavigate()
+	const [form, setForm] = useState<AuthFormState>(emptyForm);
+	const [loading, setLoading] = useState(false);
+	const [errors, setErrors] = useState<any>();
+	const { setUser, setToken } = useAuthContext();
+	const navigate = useNavigate();
 
-  const handleSignUp = (e: React.FormEvent) => {
-    e.preventDefault()
-    setForm({
-      name: form.name,
-      email: form.email,
-      phone: form.phone,
-      password: form.password,
-      password_confirmation: form.password_confirmation
-    })
+	const handleSignUp = async (e: React.FormEvent) => {
+		e.preventDefault();
+		try {
+			setLoading(true);
+			const token: string = await baseAPI.get('/sanctum/csrf-cookie', {
+				baseURL: import.meta.env.VITE_API_URL
+			});
+			setToken!(token);
+			const res = await baseAPI.post('/register', form, {
+				baseURL: import.meta.env.VITE_API_URL
+			});
+			if (res.status === 200) {
+				setUser!(form);
+			}
+			navigate('/');
+		} catch (err) {
+			setLoading(false);
+			console.log(loading);
+			if (err instanceof AxiosError) {
+				if (err.status === 500) {
+					setErrors('Network Error!');
+				}
+				setErrors(err.response?.data.errors);
+			} else {
+				throw new Error('Terjadi kesalahan saat');
+			}
+			console.error(err);
+		} finally {
+			setLoading(false);
+		}
+	};
 
-    async () => {
-      setIsLoading(true)
-      const token: string = await baseAPI.get('/sanctum/csrf-cookie', {
-        baseURL: import.meta.env.VITE_API_URL
-      })
-      setToken(token)
-      try {
-        const res = await baseAPI.post('/register', form, {
-          baseURL: import.meta.env.VITE_API_URL
-        })
-        if(res.status === 200 && res.data){
-          setUser(res.data)
-        }
-        navigate('/')
-      } catch (err){
-        if(err instanceof AxiosError){
-          setErrors(err.response?.data.errors)
-        }
-        console.error(err)
-      }
-    }
-  }
+	const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		e.preventDefault();
+		setForm({ ...form, [e.target.name]: e.target.value });
+	};
 
-  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    setForm({ ...form, [e.target.name]: e.target.value });
-  }
+	return (
+		<div className='min-h-screen w-full flex justify-center items-center'>
+			<Title title='Sign Up' />
+			<form
+				onSubmit={handleSignUp}
+				className='flex flex-col gap-4 min-w-80 md:min-w-100 p-8 rounded-lg border border-neutral-700 shadow-lg shadow-neutral-900 text-sm'
+			>
+				<h3 className='text-center text-lg font-bold leading-3'>Sign Up</h3>
+				<div className='flex flex-col gap-2'>
+					<label htmlFor='name'>Name</label>
+					<input
+						type='text'
+						placeholder='Enter name'
+						id='name'
+						name='name'
+						value={form.name}
+						onChange={handleFormChange}
+					/>
+					{errors?.name && <span className='absolute text-red-500 text-xs'>{errors.name}</span>}
+				</div>
+				<div className='flex flex-col gap-2'>
+					<label htmlFor='email'>Email</label>
+					<input
+						type='text'
+						placeholder='Enter email'
+						id='email'
+						name='email'
+						value={form.email}
+						onChange={handleFormChange}
+					/>
+					{errors?.email && <span className='absolute text-red-500 text-xs'>{errors.email}</span>}
+				</div>
+				<div className='flex flex-col gap-2'>
+					<label htmlFor='phone'>Phone Number</label>
+					<input
+						type='text'
+						placeholder='Enter phone number'
+						id='phone'
+						name='phone'
+						value={form.phone}
+						onChange={handleFormChange}
+					/>
+					{errors?.phone && <span className='absolute text-red-500 text-xs'>{errors.phone}</span>}
+				</div>
+				<div className='flex flex-col gap-2'>
+					<label htmlFor='password'>Password</label>
+					<input
+						type='password'
+						placeholder='Enter password'
+						id='password'
+						name='password'
+						value={form.password}
+						onChange={handleFormChange}
+					/>
+					{errors?.password && (
+						<span className='absolute text-red-500 text-xs'>{errors.password}</span>
+					)}
+				</div>
+				<div className='flex flex-col gap-2'>
+					<label htmlFor='password_confirmation'>Password Confirmation</label>
+					<input
+						type='password'
+						placeholder='Enter password confirmation'
+						id='password_confirmation'
+						name='password_confirmation'
+						value={form.password_confirmation}
+						onChange={handleFormChange}
+					/>
+					{errors?.password && (
+						<span className='absolute text-red-500 text-xs'>{errors.password}</span>
+					)}
+				</div>
+				<span className='text-xs text-center text-neutral-300'>
+					Alredy have account?{' '}
+					<Link
+						to='/sign-in'
+						className='text-white hover:underline'
+					>
+						Login
+					</Link>
+				</span>
+				<button
+					disabled={loading}
+					type='submit'
+					className='font-semibold border rounded-full py-1.5 mt-2'
+				>
+					{loading ? 'Signing Up' : 'Sign Up'}
+				</button>
+			</form>
+		</div>
+	);
+};
 
-  return (
-    <div className="min-h-screen w-full justify-center items-center">      
-      <title>Sign Up</title>
-      <form onSubmit={handleSignUp} className="flex flex-col gap-4">
-        <div className="flex flex-col gap-3">
-          <label htmlFor="name">name</label>
-          <input type="text" placeholder="Enter name" id="name" name="name" onChange={handleFormChange} />
-          {errors?.name && <span className="text-red-500 text-xs">{errors.name}</span> }
-        </div>
-        <div>
-          <label htmlFor="email">email</label>
-          <input type="email" placeholder="Enter email" id="email" name="email" onChange={handleFormChange} />
-          {errors?.email && <span className="text-red-500 text-xs">{errors.email}</span> }
-        <div>
-          <label htmlFor="phone">phone</label>
-          <input type="text" placeholder="Enter phone number" id="phone" name="phone" onChange={handleFormChange} />
-          {errors?.phone && <span className="text-red-500 text-xs">{errors.phone}</span> }
-        </div>
-        </div>
-        <div>
-          <label htmlFor="password">password</label>
-          <input type="text" placeholder="Enter password" id="password" name="password" onChange={handleFormChange} />
-          {errors?.password && <span className="text-red-500 text-xs">{errors.password}</span> }
-        </div>
-        <div>
-          <label htmlFor="password_confirmation">password_confirmation</label>
-          <input type="text" placeholder="Enter password_confirmation" id="password_confirmation" name="password_confirmation" onChange={handleFormChange} />
-          {errors?.password && <span className="text-red-500 text-xs">{errors.password}</span> }
-        </div>
-        <button disabled={loading} type="submit">{loading? 'Signing Up':'Sign Up'}</button>
-      </form>
-    </div>
-  )
-}
-
-export default SignUp
+export default SignUp;
