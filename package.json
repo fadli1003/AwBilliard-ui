@@ -13,6 +13,7 @@
   "dependencies": {
     "axios": "^1.13.2",
     "dotenv": "^17.2.3",
+    "lucide-react": "^0.562.0",
     "next-theme": "^0.1.5",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
