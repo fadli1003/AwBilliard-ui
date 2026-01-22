@@ -1,28 +1,45 @@
 import { Link, Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/AuthContext';
 import baseAPI from '../../utils/api';
-import { Power, Sun } from 'lucide-react';
+import { Loader2, Power, Sun } from 'lucide-react';
+import { useState } from 'react';
+import { AxiosError } from 'axios';
 
 const DefaultLayout = () => {
-	const { user } = useAuthContext();
+	const { isLogin, setIsLogin } = useAuthContext();
+  const [isLoading, setIsLoading] = useState(false)
 	const navigate = useNavigate();
+  const [errors, setErrors] = useState([])
 
 	const handleLogout = async () => {
+    setIsLoading(true)
 		try {
 			await baseAPI.post('/logout', [], {
 				baseURL: import.meta.env.VITE_API_URL
 			});
 			localStorage.removeItem('user');
-			navigate('/');
+			setIsLogin(false)
+      navigate('/sign-in')
 		} catch (err) {
+      setIsLoading(false)
+      if(err instanceof AxiosError){
+        setErrors(err.response?.data.errors)
+      }
 			console.error(err);
-		}
+		}finally{
+      setIsLoading(false)
+    }
 	};
 
-	if (!user) return <Navigate to='/sign-in' />;
+	if (!isLogin) return <Navigate to='/sign-in' />
 
 	return (
 		<div id='defaultLayout'>
+      <div className='fixed top-0'>
+        {errors && errors.map((err: string, i: number) => (
+          <span key={i}>{err}</span>
+        ))}
+      </div>
 			<aside className='sticky top-0 w-18 md:w-3xs h-screen  border-neutral-600 shadow-[2px_0px_6px] shadow-gray-800 flex flex-col justify-between py-6 px-5'>
 				<div>
 					<Link
@@ -50,7 +67,7 @@ const DefaultLayout = () => {
 						>
 							Sign Out
 						</button>
-						<Power size={16} />
+            {isLoading ? <Loader2 size={16} className='animate-spin' /> : <Power size={16} />}
 					</div>
 				</div>
 			</aside>

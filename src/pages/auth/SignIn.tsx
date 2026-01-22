@@ -11,18 +11,18 @@ const emptyForm = {
 };
 
 const SignIn = () => {
-	const [form, setForm] = useState<AuthFormState>(emptyForm);
+	const [form, setForm] = useState<UserType>(emptyForm);
 	const [loading, setLoading] = useState(false);
 	const [errors, setErrors] = useState<any>();
 	const { setUser, setIsLogin } = useAuthContext();
 
 	const handleSignIn = async (e: React.FormEvent) => {
 		e.preventDefault();
+		setLoading(true);
 		try {
-			const res = await baseAPI.post('/login', form, {
+			await baseAPI.post('/login', form, {
 				baseURL: import.meta.env.VITE_API_URL
 			});
-
 			const user = await baseAPI.get('/user');
 			const { email, id, role } = user.data;
 			setUser!({ email: email, id: id, role: role });
@@ -53,10 +53,10 @@ const SignIn = () => {
 			<Title title='Sign In' />
 			<form
 				onSubmit={handleSignIn}
-				className='flex flex-col gap-4 min-w-80 md:min-w-100 p-8 rounded-lg border border-neutral-700 shadow-lg shadow-neutral-900 text-sm'
+				className='flex flex-col gap-5.5 min-w-80 md:min-w-100 p-8 rounded-lg border border-neutral-700 shadow-lg shadow-neutral-900 text-sm'
 			>
 				<h3 className='text-center text-lg font-bold leading-3'>Sign In</h3>
-				<div className='flex flex-col gap-2'>
+				<div className='flex flex-col gap-2 relative'>
 					<label htmlFor='email'>Email</label>
 					<input
 						type='text'
@@ -66,7 +66,7 @@ const SignIn = () => {
 						value={form.email}
 						onChange={handleFormChange}
 					/>
-					{errors?.email && <span className='absolute text-red-500 text-xs'>{errors.email}</span>}
+					{errors?.email && <span className='absolute -bottom-5 text-red-500 text-xs'>{errors.email}</span>}
 				</div>
 				<div className='flex flex-col gap-2'>
 					<label htmlFor='password'>Password</label>
@@ -94,7 +94,7 @@ const SignIn = () => {
 				<button
 					disabled={loading}
 					type='submit'
-					className='font-semibold border rounded-full py-1.5 mt-2'
+					className='font-semibold border rounded-full py-1.5'
 				>
 					{loading ? 'Signing In' : 'Sign In'}
 				</button>

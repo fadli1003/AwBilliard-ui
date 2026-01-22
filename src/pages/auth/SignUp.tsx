@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import baseAPI from '../../utils/api';
+import baseAPI from '@/utils/api';
 import { AxiosError } from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuthContext } from '../../context/AuthContext';
-import Title from '../../components/Title';
+import { Link } from 'react-router-dom';
+import { useAuthContext } from '@/context/AuthContext';
+import Title from '@/components/Title';
 
 const emptyForm = {
 	name: '',
@@ -22,8 +22,8 @@ const SignUp = () => {
 
 	const handleSignUp = async (e: React.FormEvent) => {
 		e.preventDefault();
+		setLoading(true);
 		try {
-			setLoading(true);
 			// const token: string = await baseAPI.get('/sanctum/csrf-cookie', {
 			// 	baseURL: import.meta.env.VITE_API_URL
 			// });

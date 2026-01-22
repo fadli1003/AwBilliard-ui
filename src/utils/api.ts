@@ -1,24 +1,10 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { useAuthContext } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-
-const { setIsLogin } = useAuthContext()
-const navigate = useNavigate()
 
 const baseAPI = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api`,
   withCredentials: true,
   withXSRFToken: true
 }) 
-
-// baseAPI.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-//   const token = localStorage.getItem('ACCESS_TOKEN')
-//   if (token) {
-//     config.headers.Authorization = `Bearer ${token}`;
-//   }
-
-//   return config
-// })
 
 baseAPI.interceptors.request.use((config) => {
   config.headers.Accept = 'application/json'
@@ -35,8 +21,6 @@ baseAPI.interceptors.response.use((response: AxiosResponse) => {
 }, (error: AxiosError) => {
   if(error.response?.status === 401){
     localStorage.removeItem('user')
-    setIsLogin(false)
-    navigate('/')
   }
 
   throw error
