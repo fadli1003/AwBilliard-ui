@@ -2,39 +2,38 @@ import React, { useState } from 'react';
 import baseAPI from '../../utils/api';
 import { AxiosError } from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuthContext } from '../../context/ContextProvider';
+import { useAuthContext } from '../../context/AuthContext';
 import Title from '../../components/Title';
 
-const emptyForm = { 
-  name: '', 
-  email: '', 
-  phone: '', 
-  password: '', 
-  password_confirmation: '' 
+const emptyForm = {
+	name: '',
+	email: '',
+	phone: '',
+	password: '',
+	password_confirmation: ''
 };
 
 const SignUp = () => {
-	const [form, setForm] = useState<AuthFormState>(emptyForm);
+	const [form, setForm] = useState<UserType>(emptyForm);
 	const [loading, setLoading] = useState(false);
 	const [errors, setErrors] = useState<any>();
-	const { setUser, setToken } = useAuthContext();
-	const navigate = useNavigate();
+	const { setUser, setIsLogin } = useAuthContext();
+	// const navigate = useNavigate();
 
 	const handleSignUp = async (e: React.FormEvent) => {
 		e.preventDefault();
 		try {
 			setLoading(true);
-			const token: string = await baseAPI.get('/sanctum/csrf-cookie', {
-				baseURL: import.meta.env.VITE_API_URL
-			});
-			setToken!(token);
+			// const token: string = await baseAPI.get('/sanctum/csrf-cookie', {
+			// 	baseURL: import.meta.env.VITE_API_URL
+			// });
 			const res = await baseAPI.post('/register', form, {
 				baseURL: import.meta.env.VITE_API_URL
 			});
 			if (res.status === 201) {
-				setUser!({email: form.email, role: 'user'});
+				setUser!({ email: form.email, role: 'user' });
+				setIsLogin(true)
 			}
-			navigate('/');
 		} catch (err) {
 			setLoading(false);
 			if (err instanceof AxiosError) {
@@ -43,7 +42,7 @@ const SignUp = () => {
 				}
 				setErrors(err.response?.data.errors);
 			} else {
-				throw new Error('Terjadi kesalahan saat');
+				throw new Error('Terjadi kesalahan!');
 			}
 			console.error(err);
 		} finally {

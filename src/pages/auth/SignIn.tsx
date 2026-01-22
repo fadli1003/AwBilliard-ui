@@ -1,37 +1,32 @@
 import React, { useState } from 'react';
 import baseAPI from '../../utils/api';
 import { AxiosError } from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuthContext } from '../../context/ContextProvider';
+import { Link } from 'react-router-dom';
+import { useAuthContext } from '../../context/AuthContext';
 import Title from '../../components/Title';
 
-const emptyForm = { 
-  email: '',  
-  password: '', 
+const emptyForm = {
+	email: '',
+	password: ''
 };
 
 const SignIn = () => {
 	const [form, setForm] = useState<AuthFormState>(emptyForm);
 	const [loading, setLoading] = useState(false);
 	const [errors, setErrors] = useState<any>();
-	const { setUser, setToken } = useAuthContext();
-	const navigate = useNavigate();
+	const { setUser, setIsLogin } = useAuthContext();
 
 	const handleSignIn = async (e: React.FormEvent) => {
 		e.preventDefault();
 		try {
-			setLoading(true);
-			const token: string = await baseAPI.get('/sanctum/csrf-cookie', {
+			const res = await baseAPI.post('/login', form, {
 				baseURL: import.meta.env.VITE_API_URL
 			});
-			const res = await baseAPI.post('/login', form, {
-        baseURL: import.meta.env.VITE_API_URL
-			});
-      const user = await baseAPI.get('/user')
-      const { email, id, role } = user.data
-      setUser!({email: email, id: id, role: role})
-      setToken!(token);
-      // navigate('/');
+
+			const user = await baseAPI.get('/user');
+			const { email, id, role } = user.data;
+			setUser!({ email: email, id: id, role: role });
+			setIsLogin(true)
 		} catch (err) {
 			setLoading(false);
 			if (err instanceof AxiosError) {
@@ -40,7 +35,7 @@ const SignIn = () => {
 				}
 				setErrors(err.response?.data.errors);
 			} else {
-				throw new Error('Terjadi kesalahan saat');
+				throw new Error('Terjadi kesalahan!');
 			}
 			console.error(err);
 		} finally {

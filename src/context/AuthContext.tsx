@@ -2,38 +2,29 @@ import React,{ createContext, Dispatch, SetStateAction, useContext, useState } f
 
 interface ContextType{
   user: null | object
-  token: string | null
-  setToken?: (token: string) => void
-  setUser?: Dispatch<SetStateAction<{}>>
-
+  setUser: Dispatch<SetStateAction<{}>>
+  isLogin: boolean
+  setIsLogin: ( value: boolean ) => void
 }
 
 const authContext = createContext<ContextType>({
   user: null,
-  token: null,
   setUser: () => {},
-  setToken: () => {}
+  isLogin: false,
+  setIsLogin: () => {}
 })
 
 export const AuthContextProvider = ({children}: { children: React.ReactNode}) => {
   const [user, setUser] = useState({})
-  const [token, _setToken] = useState(localStorage.getItem('ACCESS_TOKEN'))
-
-  const setToken = (token: string) => {
-    _setToken(token)
-    if(token){
-      localStorage.setItem('ACCESS_TOKEN', token)
-    }else{
-      localStorage.removeItem('ACCESS_TOKEN')
-    }
-  }
+  const [isLogin, _setIsLogin] = useState(false)
+  const setIsLogin = (value: boolean) => _setIsLogin(value)
 
   return (
     <authContext.Provider value={{
       user,
-      token,
-      setToken,
-      setUser
+      setUser,
+      isLogin,
+      setIsLogin
     }}>{children}</authContext.Provider>
   )
 }

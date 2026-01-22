@@ -1,16 +1,16 @@
-import { Navigate, Outlet } from "react-router-dom"
-import { useAuthContext } from "../../context/ContextProvider"
+import { Navigate, Outlet } from 'react-router-dom';
+import { useAuthContext } from '../../context/AuthContext';
 
 const GuestLayout = () => {
-  const {user, token} = useAuthContext()
+	const { isLogin} = useAuthContext();
 
-  if(token) return <Navigate to='/' />
+	if (isLogin) return <Navigate to='/' />;
 
-  return (
-    <div>
-      <Outlet />
-    </div>
-  )
-}
+	return (
+		<div>
+			<Outlet />
+		</div>
+	);
+};
 
-export default GuestLayout
+export default GuestLayout;
