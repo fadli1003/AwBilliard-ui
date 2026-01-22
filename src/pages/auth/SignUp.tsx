@@ -31,13 +31,12 @@ const SignUp = () => {
 			const res = await baseAPI.post('/register', form, {
 				baseURL: import.meta.env.VITE_API_URL
 			});
-			if (res.status === 200) {
-				setUser!(form);
+			if (res.status === 201) {
+				setUser!({email: form.email, role: 'user'});
 			}
 			navigate('/');
 		} catch (err) {
 			setLoading(false);
-			console.log(loading);
 			if (err instanceof AxiosError) {
 				if (err.status === 500) {
 					setErrors('Network Error!');
@@ -130,7 +129,7 @@ const SignUp = () => {
 					)}
 				</div>
 				<span className='text-xs text-center text-neutral-300'>
-					Alredy have account?{' '}
+					Already have account?{' '}
 					<Link
 						to='/sign-in'
 						className='text-white hover:underline'
