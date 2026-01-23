@@ -53,7 +53,7 @@ const SignUp = () => {
 		const {name, value } = e.target
 		setForm({ ...form, [name]: value });
 		if(errors){
-			setErrors((prev: any) => {
+			setErrors((prev: AuthFormError | null) => {
 				const newErrors = {...prev}
 				delete newErrors[name as keyof AuthFormError]
 				return newErrors

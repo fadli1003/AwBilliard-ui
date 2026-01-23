@@ -1,6 +1,6 @@
 import { Link, Navigate, Outlet, useNavigate } from 'react-router-dom';
-import { useAuthContext } from '../../context/AuthContext';
-import baseAPI from '../../utils/api';
+import { useAuthContext } from '@/context/AuthContext';
+import baseAPI from '@/utils/api';
 import { Loader2, Power, Sun } from 'lucide-react';
 import { useState } from 'react';
 import { AxiosError } from 'axios';
