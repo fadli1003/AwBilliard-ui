@@ -1,28 +1,33 @@
-import React,{ createContext, Dispatch, SetStateAction, useContext, useState } from "react";
+import React,{ createContext, useContext, useState } from "react";
 
 interface ContextType{
-  user: null | object
-  setUser: Dispatch<SetStateAction<{}>>
+  user: UserType | null
+  setUser: (user: UserType) => void
   isLogin: boolean
   setIsLogin: ( value: boolean ) => void,
 }
 
-const AuthContext = createContext<ContextType>({
-  user: null,
-  setUser: () => {},
-  isLogin: false,
-  setIsLogin: () => {},
-})
+const AuthContext = createContext<ContextType | null>(null)
 
 export const AuthContextProvider = ({children}: { children: React.ReactNode}) => {
-  const [user, setUser] = useState({})
-  const [isLogin, _setIsLogin] = useState(false)
-  const setIsLogin = (value: boolean) => {
-    _setIsLogin(value)
-    if(value === false){
-      localStorage.removeItem('user')
-    }
+  const [user, _setUser] = useState<UserType | null>(() => {
+    const savedUser = localStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  })
+  const [isLogin, setIsLogin] = useState(!!user)
+
+  const setUser = (authUser: UserType) => {
+    localStorage.setItem('user', JSON.stringify(authUser))
+    _setUser(authUser)
+    setIsLogin(true)
   }
+
+  // const setIsLogin = (value: boolean) => {
+  //   _setIsLogin(value)
+  //   if(value === false){
+  //     localStorage.removeItem('user')
+  //   }
+  // }
 
   return (
     <AuthContext.Provider value={{

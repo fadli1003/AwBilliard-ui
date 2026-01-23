@@ -86,9 +86,9 @@ export const addBooking = async (booking: BookingType) => {
   }
 }
 
-export const addPayment = async(payment: PaymentType) => {
+export const addPayment = async(bookingId: number, payment: PaymentType) => {
   try{
-    const res = await baseAPI.post('/payment', payment)
+    const res = await baseAPI.post(`/booking/${bookingId}/payment`, payment)
     return res.data
   }catch(err){
     if(err instanceof AxiosError){

@@ -14,11 +14,12 @@ const emptyForm = {
 const SignIn = () => {
 	const [form, setForm] = useState<UserType>(emptyForm);
 	const [loading, setLoading] = useState(false);
-	const [errors, setErrors] = useState<any>();
-	const { setUser, setIsLogin } = useAuthContext();
+	const [errors, setErrors] = useState<AuthFormError | null>(null);
+	const { setUser } = useAuthContext();
 
 	const handleSignIn = async (e: React.FormEvent) => {
 		e.preventDefault();
+		setErrors(null)
 		setLoading(true);
 		try {
 			await baseAPI.get('/sanctum/csrf-cookie', {
@@ -27,39 +28,49 @@ const SignIn = () => {
 			await baseAPI.post('/login', form, {
 				baseURL: import.meta.env.VITE_API_URL
 			});
-			const user = await baseAPI.get('/user');
-			const { email, id, role } = user.data;
-			setUser!({ email: email, id: id, role: role });
-			setIsLogin(true)
+			const loggedUser = await baseAPI.get('/user');
+			const { email, role } = loggedUser.data;			
+			setUser!({ email: email, role: role });
 		} catch (err) {
 			setLoading(false);
 			if (err instanceof AxiosError) {
-				if (err.status === 500) {
-					setErrors('Network Error!');
-				}
-				setErrors(err.response?.data.errors);
+				if (err.code === 'ERR_NETWORK') {
+					setErrors({ msg: 'Network Error!' });
+				}else if (err.status === 422) {
+					setErrors(err.response?.data.errors);
+				}else{
+					setErrors({msg: 'Terjadi kesalahan saat login!'})
+				}				
 			} else {
-				throw new Error('Terjadi kesalahan!');
+				throw new Error(`Terjadi kesalahan! ${err}`);
+				// console.error(err);
 			}
-			console.error(err);
 		} finally {
 			setLoading(false);
 		}
 	};
 
 	const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		e.preventDefault();
 		setForm({ ...form, [e.target.name]: e.target.value });
+		// if(errors) setErrors(null)
+		if(errors){
+			setErrors((prev: any) => {
+				const newErrors = {...prev}
+				delete newErrors[e.target.name as keyof AuthFormError]
+				return newErrors
+			})
+		}
 	};
 
 	return (
 		<div className='min-h-screen w-full flex justify-center items-center'>
 			<Title title='Sign In' />
+			{errors?.msg && <span className='absolute top-15 right-5 px-4.5 py-1.5 bg-white/20 text-red-500 rounded-full text-sm'>{errors.msg}</span>}
 			<form
 				onSubmit={handleSignIn}
 				className='flex flex-col gap-5.5 min-w-80 md:min-w-100 p-8 rounded-lg border border-neutral-700 shadow-lg shadow-neutral-900 text-sm'
 			>
-				<h3 className='text-center text-lg font-bold leading-3'>Sign In</h3>
+				<h3 className='text-center text-lg font-bold leading-3 font-syne'>Sign In</h3>
 				<div className='flex flex-col gap-2 relative'>
 					<label htmlFor='email'>Email</label>
 					<input
@@ -70,9 +81,9 @@ const SignIn = () => {
 						value={form.email}
 						onChange={handleFormChange}
 					/>
-					{errors?.email && <span className='absolute -bottom-5 text-red-500 text-xs'>{errors.email}</span>}
+					{errors?.email && <span className='absolute -bottom-5 text-red-500 text-xs'>{errors.email.join(', ')}</span>}
 				</div>
-				<div className='flex flex-col gap-2'>
+				<div className='flex flex-col gap-2 relative'>
 					<label htmlFor='password'>Password</label>
 					<input
 						type='password'
@@ -83,7 +94,7 @@ const SignIn = () => {
 						onChange={handleFormChange}
 					/>
 					{errors?.password && (
-						<span className='absolute text-red-500 text-xs'>{errors.password}</span>
+						<span className='absolute -bottom-5 text-red-500 text-xs'>{errors.password.join(', ')}</span>
 					)}
 				</div>
 				<span className='text-xs text-center text-neutral-300'>

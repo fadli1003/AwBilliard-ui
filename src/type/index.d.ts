@@ -1,11 +1,27 @@
 interface UserType {
   id?: number,
   name?: string,
-  email: string,
-  password: string,
+  email?: string,
+  password?: string,
   password_confirmation?: string,
   phone?: string,
   role?: 'admin' | 'user' | 'owner' | 'manager' | 'staff' | 'coach',
+}
+
+interface AuthFormError {
+  email?: string[],
+  password?:string[],
+  name?: string[],
+  phone?:string[],
+  msg?: string
+}
+
+interface MejaType {
+  id?: number,
+  no_meja: string,
+  harga_perjam: number,
+  status?: 'available' | 'maintanance',
+
 }
 
 interface BookingType {
