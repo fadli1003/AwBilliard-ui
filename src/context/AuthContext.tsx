@@ -7,7 +7,7 @@ interface ContextType{
   setIsLogin: ( value: boolean ) => void,
 }
 
-const authContext = createContext<ContextType>({
+const AuthContext = createContext<ContextType>({
   user: null,
   setUser: () => {},
   isLogin: false,
@@ -25,17 +25,17 @@ export const AuthContextProvider = ({children}: { children: React.ReactNode}) =>
   }
 
   return (
-    <authContext.Provider value={{
+    <AuthContext.Provider value={{
       user,
       setUser,
       isLogin,
       setIsLogin,
-    }}>{children}</authContext.Provider>
+    }}>{children}</AuthContext.Provider>
   )
 }
 
 export const useAuthContext = () => {
-  const context = useContext(authContext)
+  const context = useContext(AuthContext)
   if(!context){
     throw new Error('useAuthContext must be used within AuthContextProvider')
   }

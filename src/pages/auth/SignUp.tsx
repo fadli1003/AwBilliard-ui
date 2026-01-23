@@ -4,6 +4,7 @@ import { AxiosError } from 'axios';
 import { Link } from 'react-router-dom';
 import { useAuthContext } from '@/context/AuthContext';
 import Title from '@/components/Title';
+import { Loader2 } from 'lucide-react';
 
 const emptyForm = {
 	name: '',
@@ -24,9 +25,9 @@ const SignUp = () => {
 		e.preventDefault();
 		setLoading(true);
 		try {
-			// const token: string = await baseAPI.get('/sanctum/csrf-cookie', {
-			// 	baseURL: import.meta.env.VITE_API_URL
-			// });
+			await baseAPI.get('/sanctum/csrf-cookie', {
+				baseURL: import.meta.env.VITE_API_URL
+			});
 			const res = await baseAPI.post('/register', form, {
 				baseURL: import.meta.env.VITE_API_URL
 			});
@@ -62,7 +63,7 @@ const SignUp = () => {
 				onSubmit={handleSignUp}
 				className='flex flex-col gap-4 min-w-80 md:min-w-100 p-8 rounded-lg border border-neutral-700 shadow-lg shadow-neutral-900 text-sm'
 			>
-				<h3 className='text-center text-lg font-bold leading-3'>Sign Up</h3>
+				<h3 className='text-center text-lg font-bold leading-3 font-syne'>Sign Up</h3>
 				<div className='flex flex-col gap-2'>
 					<label htmlFor='name'>Name</label>
 					<input
@@ -139,9 +140,9 @@ const SignUp = () => {
 				<button
 					disabled={loading}
 					type='submit'
-					className='font-semibold border rounded-full py-1.5 mt-2'
+					className='font-semibold border rounded-full py-1.75 mt-2 flex gap-2 justify-center items-center'
 				>
-					{loading ? 'Signing Up' : 'Sign Up'}
+					{loading ? <><Loader2 className='animate-spin'/>Signing Up...</> : 'Sign Up'}
 				</button>
 			</form>
 		</div>

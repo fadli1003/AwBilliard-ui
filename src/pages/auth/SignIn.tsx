@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import baseAPI from '../../utils/api';
+import baseAPI from '@/utils/api';
 import { AxiosError } from 'axios';
 import { Link } from 'react-router-dom';
-import { useAuthContext } from '../../context/AuthContext';
-import Title from '../../components/Title';
+import { useAuthContext } from '@/context/AuthContext';
+import Title from '@/components/Title';
+import { Loader2 } from 'lucide-react';
 
 const emptyForm = {
 	email: '',
@@ -20,6 +21,9 @@ const SignIn = () => {
 		e.preventDefault();
 		setLoading(true);
 		try {
+			await baseAPI.get('/sanctum/csrf-cookie', {
+				baseURL: import.meta.env.VITE_API_URL
+			});
 			await baseAPI.post('/login', form, {
 				baseURL: import.meta.env.VITE_API_URL
 			});
@@ -94,9 +98,9 @@ const SignIn = () => {
 				<button
 					disabled={loading}
 					type='submit'
-					className='font-semibold border rounded-full py-1.5'
+					className='font-semibold border rounded-full py-1.75 flex gap-2 justify-center items-center'
 				>
-					{loading ? 'Signing In' : 'Sign In'}
+					{loading ? <><Loader2 className='animate-spin size-4'/>Signing In</> : 'Sign In'}
 				</button>
 			</form>
 		</div>

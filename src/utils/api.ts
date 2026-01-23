@@ -11,10 +11,6 @@ baseAPI.interceptors.request.use((config) => {
   return config
 })
 
-await baseAPI.get('/sanctum/csrf-cookie', {
-  baseURL: import.meta.env.VITE_API_URL
-});
-
 baseAPI.interceptors.response.use((response: AxiosResponse) => {
   return response
 
