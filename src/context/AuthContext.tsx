@@ -10,14 +10,15 @@ interface ContextType{
 const AuthContext = createContext<ContextType | null>(null)
 
 export const AuthContextProvider = ({children}: { children: React.ReactNode}) => {
-  const [user, _setUser] = useState<UserType | null>(() => {
-    const savedUser = localStorage.getItem('user');
-    return savedUser ? JSON.parse(savedUser) : null;
-  })
+  const initialUser = () => {
+    const savedUser = localStorage.getItem('aw_user');
+    return savedUser ? (typeof savedUser === 'string' ? savedUser : JSON.parse(savedUser)) : null;
+  }
+  const [user, _setUser] = useState<UserType | null>(initialUser())
   const [isLogin, setIsLogin] = useState(!!user)
 
   const setUser = (authUser: UserType) => {
-    localStorage.setItem('user', JSON.stringify(authUser))
+    localStorage.setItem('aw_user', JSON.stringify(authUser))
     _setUser(authUser)
     setIsLogin(true)
   }

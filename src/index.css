@@ -75,3 +75,15 @@ html{
 input[type=text], input[type=email], input[type=password]{
   @apply border border-neutral-600 px-3 py-1.5 rounded-sm focus:outline-neutral-400 focus:outline-1 focus:ring-0
 }
+
+.animate-err{
+  animation: err-animation .3s ease-in !important;
+}
+@keyframes err-animation {
+  from{
+    transform: scaleX(0%)
+  }
+  to{
+    transform: scaleX(100%);
+  }
+}

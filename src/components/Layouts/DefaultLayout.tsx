@@ -1,15 +1,15 @@
 import { Link, Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '@/context/AuthContext';
 import baseAPI from '@/utils/api';
-import { Loader2, Power, Sun } from 'lucide-react';
-import { useState } from 'react';
+import { Loader2, Power, Sun, UserRound } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { AxiosError } from 'axios';
 
 const DefaultLayout = () => {
 	const { isLogin, setIsLogin } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false)
 	const navigate = useNavigate();
-  const [errors, setErrors] = useState([])
+  const [errors, setErrors] = useState<string[]| null>(null)
 
 	const handleLogout = async () => {
     setIsLoading(true)
@@ -17,13 +17,14 @@ const DefaultLayout = () => {
 			await baseAPI.post('/logout', [], {
 				baseURL: import.meta.env.VITE_API_URL
 			});
-			localStorage.removeItem('user');
+			localStorage.removeItem('aw_user');
 			setIsLogin(false)
       navigate('/sign-in')
 		} catch (err) {
       setIsLoading(false)
       if(err instanceof AxiosError){
         setErrors(err.response?.data.errors)
+				if(err.code === 'ERR_NETWORK') setErrors(['Network Error!'])
       }
 			console.error(err);
 		}finally{
@@ -33,13 +34,22 @@ const DefaultLayout = () => {
 
 	if (!isLogin) return <Navigate to='/sign-in' />
 
+	useEffect(()=> {
+		if(errors){
+			const timer = setTimeout(() => {
+				setErrors(null)
+			}, 5000)
+			return () => clearTimeout(timer)
+		}
+	}, [errors])
+
 	return (
 		<div id='defaultLayout'>
-      <div className='fixed top-0'>
-        {errors && errors.map((err: string, i: number) => (
+      {errors && errors.map((err: string, i: number) => (
+      <div className='fixed top-5 right-7 bg-red-500/30 text-red-500 border rounded-full animate-err px-4 py-1'>
           <span key={i}>{err}</span>
-        ))}
       </div>
+        ))}
 			<aside className='sticky top-0 w-18 md:w-3xs h-screen  border-neutral-600 shadow-[2px_0px_6px] shadow-gray-800 flex flex-col justify-between py-6 px-5'>
 				<div>
 					<Link
@@ -61,13 +71,17 @@ const DefaultLayout = () => {
 						<Sun size={16} />
 					</div>
 					<div className='flex gap-2 items-center justify-center border border-gray-700 hover:border-gray-600 rounded py-1.5 cursor-pointer hover:text-white'>
-						<button
-							onClick={handleLogout}
-							className=''
-						>
-							Sign Out
-						</button>
-            {isLoading ? <Loader2 size={16} className='animate-spin' /> : <Power size={16} />}
+						{isLogin ? (
+							<>
+								<button onClick={handleLogout}>Sign Out</button>
+								{isLoading ? <Loader2 size={16} className='animate-spin' /> : <Power size={16} />}
+							</>
+						) : (
+							<>
+								<Link to='/sign-up'>Sign In</Link>
+								{isLoading ? <Loader2 size={16} className='animate-spin' /> : <UserRound size={16} />}
+							</>							
+						)}
 					</div>
 				</div>
 			</aside>
