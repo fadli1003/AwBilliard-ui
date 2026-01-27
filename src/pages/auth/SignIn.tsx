@@ -65,12 +65,13 @@ const SignIn = () => {
 	return (
 		<div className='min-h-screen w-full flex justify-center items-center'>
 			<Title title='Sign In' />
-			{errors?.msg && <span className='absolute top-15 right-5 px-4.5 py-1.5 bg-white/20 text-red-500 rounded-full text-sm'>{errors.msg}</span>}
+			{errors?.msg && <span className='absolute top-10 right-5 px-4.5 pb-1 pt-1.25 bg-white/20 text-red-500 rounded-full text-sm'>{errors.msg}</span>}
 			<form
 				onSubmit={handleSignIn}
 				className='flex flex-col gap-5.5 min-w-80 md:min-w-100 p-8 rounded-lg border border-neutral-700 shadow-lg shadow-neutral-900 text-sm'
 			>
 				<h3 className='text-center text-lg font-bold leading-3 font-syne'>Sign In</h3>
+				<div className='h-px w-[40%] bg-neutral-700 self-center -mt-2.5' />
 				<div className='flex flex-col gap-2 relative'>
 					<label htmlFor='email'>Email</label>
 					<input

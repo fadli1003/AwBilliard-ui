@@ -75,6 +75,7 @@ const SignUp = () => {
 				className='flex flex-col gap-5.5 min-w-80 md:min-w-100 p-8 rounded-lg border border-neutral-700 shadow-lg shadow-neutral-900 text-sm'
 			>
 				<h3 className='text-center text-lg font-bold leading-3 font-syne'>Sign Up</h3>
+				<div className='h-px w-[40%] bg-neutral-700 self-center -mt-2.5' />
 				<div className='flex flex-col gap-2 relative'>
 					<label htmlFor='name'>Name</label>
 					<input

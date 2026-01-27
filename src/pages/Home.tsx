@@ -1,3 +1,4 @@
+import { CircleFadingPlusIcon } from 'lucide-react'
 
 const Home = () => {
   return (
