@@ -3,7 +3,11 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 const baseAPI = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api`,
   withCredentials: true,
-  withXSRFToken: true
+  withXSRFToken: true,
+  headers: {
+    'X-Requested-With': 'XMLHttpRequest',
+    'Accept' : 'application/json'
+  }
 }) 
 
 baseAPI.interceptors.request.use((config) => {

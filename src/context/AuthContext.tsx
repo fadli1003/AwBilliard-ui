@@ -1,4 +1,4 @@
-import React,{ createContext, useContext, useState } from "react";
+import React,{ createContext, useContext, useEffect, useState } from "react";
 
 interface ContextType{
   user: UserType | null
@@ -17,18 +17,17 @@ export const AuthContextProvider = ({children}: { children: React.ReactNode}) =>
   const [user, _setUser] = useState<UserType | null>(initialUser())
   const [isLogin, setIsLogin] = useState(!!user)
 
-  const setUser = (authUser: UserType) => {
+  const setUser = (authUser: UserType | null) => {
     localStorage.setItem('aw_user', JSON.stringify(authUser))
     _setUser(authUser)
     setIsLogin(true)
   }
 
-  // const setIsLogin = (value: boolean) => {
-  //   _setIsLogin(value)
-  //   if(value === false){
-  //     localStorage.removeItem('user')
-  //   }
-  // }
+  useEffect(()=> {
+    if(isLogin === false){
+      localStorage.removeItem('aw_user')
+    }
+  })
 
   return (
     <AuthContext.Provider value={{

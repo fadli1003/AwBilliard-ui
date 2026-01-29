@@ -33,6 +33,7 @@ const SignIn = () => {
 			setUser!({ email: email, role: role });
 		} catch (err) {
 			setLoading(false);
+			console.error(err)
 			if (err instanceof AxiosError) {
 				if (err.code === 'ERR_NETWORK') {
 					setErrors({ msg: 'Network Error!' });
