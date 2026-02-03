@@ -70,10 +70,10 @@ const DefaultLayout = () => {
 						<span>Theme</span>
 						<Sun size={16} />
 					</div>
-					<div className='flex gap-2 items-center justify-center border border-gray-700 hover:border-gray-600 rounded py-1.5 cursor-pointer hover:text-white'>
+					<div onClick={handleLogout} className='flex gap-2 items-center justify-center border border-gray-700 hover:border-gray-600 rounded py-1.5 cursor-pointer hover:text-white'>
 						{isLogin ? (
 							<>
-								<button onClick={handleLogout}>Sign Out</button>
+								Sign Out
 								{isLoading ? <Loader2 size={16} className='animate-spin' /> : <Power size={16} />}
 							</>
 						) : (
