@@ -25,6 +25,7 @@ const DefaultLayout = () => {
       if(err instanceof AxiosError){
         setErrors(err.response?.data.errors)
 				if(err.code === 'ERR_NETWORK') setErrors(['Network Error!'])
+				else setErrors(['Somethings wrong'])
       }
 			console.error(err);
 		}finally{
@@ -44,12 +45,12 @@ const DefaultLayout = () => {
 	}, [errors])
 
 	return (
-		<div id='defaultLayout'>
+		<div id='defaultLayout' className='flex'>
       {errors && errors.map((err: string, i: number) => (
-      <div className='fixed top-5 right-7 bg-red-500/30 text-red-500 border rounded-full animate-err px-4 py-1'>
-          <span key={i}>{err}</span>
-      </div>
-        ))}
+				<div key={i} className='fixed top-5 right-7 bg-red-500/30 text-red-500 border rounded-full animate-err px-4 py-1'>
+						<span>{err}</span>
+				</div>
+			))}
 			<aside className='sticky top-0 w-18 md:w-3xs h-screen  border-neutral-600 shadow-[2px_0px_6px] shadow-gray-800 flex flex-col justify-between py-6 px-5'>
 				<div>
 					<Link
@@ -85,7 +86,9 @@ const DefaultLayout = () => {
 					</div>
 				</div>
 			</aside>
-			<Outlet />
+			<div className='min-h-screen grow p-5 pl-7'>
+				<Outlet />
+			</div>
 		</div>
 	);
 };

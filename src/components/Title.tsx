@@ -1,7 +1,7 @@
-const Title = ({title} : {title: string}) => {
+const Title = ({title} : {title?: string}) => {
   const appName = import.meta.env.VITE_APP_NAME
   return (
-    <title>{`${title} | ${appName}`}</title>
+    <title>{`${title ?? "Dashboard"} | ${appName}`}</title>
   )
 }
 

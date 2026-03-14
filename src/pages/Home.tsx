@@ -3,9 +3,12 @@
 // }
 // const data = useMemo(() => generateData(), [])
 
+import Title from "@/components/Title"
+
 const Home = () => {
   return (
     <div>
+      <Title/>
       Home
     </div>
   )
