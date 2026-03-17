@@ -30,9 +30,7 @@ const SignUp = () => {
 			await baseAPI.get('/sanctum/csrf-cookie', {
 				baseURL: import.meta.env.VITE_API_URL
 			});
-			await baseAPI.post('/register', form, {
-				baseURL: import.meta.env.VITE_API_URL
-			});
+			await baseAPI.post('/register', form);
 			setUser!({ email: form.email, role: 'user' });
 			setIsLogin(true);
 		} catch (err) {

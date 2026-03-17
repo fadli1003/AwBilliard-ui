@@ -43,7 +43,7 @@ export const fetchUser = async(id: number) => {
 
 export const fetchJadwal = async() => {
   try{
-    const res = await baseAPI.get('/jadwal')
+    const res = await baseAPI.get('/schedule')
     return res.data
   }catch(err){
     if (err instanceof AxiosError){
@@ -77,7 +77,7 @@ export const fetchBooking = async() => {
 }
 
 export const getUserBooking = async (userId: number) => {
-  const res = await baseAPI.get(`/bookings/${userId}`)
+  const res = await baseAPI.get(`/${userId}/bookings`)
   return res.data
 }
 
@@ -95,7 +95,7 @@ export const addBooking = async (booking: BookingType) => {
 
 export const addPayment = async(bookingId: number, payment: PaymentType) => {
   try{
-    const res = await baseAPI.post(`/bookings/${bookingId}/payment`, payment)
+    const res = await baseAPI.post(`/bookings/${bookingId}/payments`, payment)
     return res.data
   }catch(err){
     if(err instanceof AxiosError){

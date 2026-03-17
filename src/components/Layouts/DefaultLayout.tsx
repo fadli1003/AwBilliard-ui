@@ -14,9 +14,7 @@ const DefaultLayout = () => {
 	const handleLogout = async () => {
     setIsLoading(true)
 		try {
-			await baseAPI.post('/logout', [], {
-				baseURL: import.meta.env.VITE_API_URL
-			});
+			await baseAPI.post('/logout', []);
 			localStorage.removeItem('aw_user');
 			setIsLogin(false)
       navigate('/sign-in')
@@ -42,6 +40,7 @@ const DefaultLayout = () => {
 			}, 5000)
 			return () => clearTimeout(timer)
 		}
+		return;
 	}, [errors])
 
 	return (
