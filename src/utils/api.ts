@@ -28,6 +28,15 @@ baseAPI.interceptors.response.use((response: AxiosResponse) => {
   return Promise.reject(error)
 })
 
+export const fetchAllUser = async(): Promise<UserType[]> => {
+  try {
+    const res = await baseAPI.get<UserType[]>('/users')
+    return res.data?.data
+  } catch(err){
+    throw err?.response
+  }
+}
+
 export const fetchUser = async(id: number) => {
   try{
     const res = await baseAPI.get(`/users/${id}`)
