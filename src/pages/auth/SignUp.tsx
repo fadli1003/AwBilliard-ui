@@ -20,6 +20,7 @@ const SignUp = () => {
 	const [errors, setErrors] = useState<AuthFormError | null>(null);
 	const { setUser, setIsLogin } = useAuthContext();
 	const [hidePw, setHidePw] = useState(true);
+	const [hideConfPw, setConfPw] = useState(true);
 	// const navigate = useNavigate();
 
 	const handleSignUp = async (e: React.FormEvent) => {
@@ -141,14 +142,23 @@ const SignUp = () => {
 				</div>
 				<div className='flex flex-col gap-2 relative'>
 					<label htmlFor='password_confirmation'>Password Confirmation</label>
-					<input
-						type={hidePw ? 'password' : 'text'}
-						placeholder='Enter password confirmation'
-						id='password_confirmation'
-						name='password_confirmation'
-						value={form.password_confirmation}
-						onChange={handleFormChange}
-					/>
+					<div className='relative flex items-center'>
+						<input
+							type={hideConfPw ? 'password' : 'text'}
+							placeholder='Enter password confirmation'
+							id='password_confirmation'
+							name='password_confirmation'
+							value={form.password_confirmation}
+							onChange={handleFormChange}
+							className='w-full'
+						/>
+						<span
+							onClick={() => setConfPw((v) => !v)}
+							className='absolute right-3 cursor-pointer'
+						>
+								{hideConfPw ? <EyeClosed size={14} /> : <Eye size={14} />}
+						</span>						
+					</div>
 					{errors?.password && (
 						<span className='absolute -bottom-5 text-red-500 text-xs'>{errors.password}</span>
 					)}

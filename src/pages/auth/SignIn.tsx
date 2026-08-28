@@ -109,7 +109,7 @@ const SignIn = () => {
 				<button
 					disabled={loading}
 					type='submit'
-					className='font-semibold border rounded-full py-1.75 flex gap-2 justify-center items-center'
+					className='font-semibold border rounded-full py-1.75 flex gap-2 justify-center items-center cursor-pointer hover:bg-white/5'
 				>
 					{loading ? <><Loader2 className='animate-spin size-4'/>Signing In</> : 'Sign In'}
 				</button>
