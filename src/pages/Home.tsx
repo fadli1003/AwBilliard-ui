@@ -4,12 +4,14 @@
 // const data = useMemo(() => generateData(), [])
 
 import Title from "@/components/Title"
+import ScrollToTop from "@/components/ui/ScrollToTop"
 
 const Home = () => {
   return (
-    <div>
+    <div className="h-[200vh]">
       <Title/>
       Home
+      <ScrollToTop />
     </div>
   )
 }

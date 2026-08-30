@@ -4,7 +4,7 @@ import { AxiosError } from 'axios';
 import { Link } from 'react-router-dom';
 import { useAuthContext } from '@/context/AuthContext';
 import Title from '@/components/Title';
-import { Loader2 } from 'lucide-react';
+import { Eye, EyeClosed, Loader2 } from 'lucide-react';
 
 const emptyForm = {
 	email: '',
@@ -16,6 +16,7 @@ const SignIn = () => {
 	const [loading, setLoading] = useState(false);
 	const [errors, setErrors] = useState<AuthFormError | null>(null);
 	const { setUser } = useAuthContext();
+	const [hidePw, setHidePw] = useState(true)
 
 	const handleSignIn = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -85,14 +86,23 @@ const SignIn = () => {
 				</div>
 				<div className='flex flex-col gap-2 relative'>
 					<label htmlFor='password'>Password</label>
-					<input
-						type='password'
-						placeholder='Enter password'
-						id='password'
-						name='password'
-						value={form.password}
-						onChange={handleFormChange}
-					/>
+					<div className="relative flex items-center">
+						<input
+							type={hidePw ? 'password' : 'text'}
+							placeholder='Enter password'
+							id='password'
+							name='password'
+							value={form.password}
+							onChange={handleFormChange}
+							className="flex w-full"
+						/>
+						<span
+							onClick={() => setHidePw((v) => !v)}
+							className='absolute right-3 cursor-pointer'
+						>
+								{hidePw ? <EyeClosed size={14} /> : <Eye size={14} />}
+						</span>	
+					</div>
 					{errors?.password && (
 						<span className='absolute -bottom-5 text-red-500 text-xs'>{errors.password.join(', ')}</span>
 					)}

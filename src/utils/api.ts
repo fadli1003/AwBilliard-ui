@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 
-const baseAPI = axios.create({
+export const baseAPI = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api`,
   withCredentials: true,
   withXSRFToken: true,
@@ -48,6 +48,10 @@ export const fetchUser = async(id: number) => {
     }
     console.error(err)
   }
+}
+
+export const searchUser = async () => {
+  const res = await baseAPI.get('/users')
 }
 
 export const fetchJadwal = async() => {
