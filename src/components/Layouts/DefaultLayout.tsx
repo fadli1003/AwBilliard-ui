@@ -1,9 +1,10 @@
 import { Link, Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '@/context/AuthContext';
 import baseAPI from '@/utils/api';
-import { Loader2, Power, Sun, UserRound } from 'lucide-react';
+import { Loader2, Power, UserRound } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { AxiosError } from 'axios';
+import { ModeToggle } from '@/components/mode-toggle';
 
 const DefaultLayout = () => {
 	const { isLogin, setIsLogin } = useAuthContext();
@@ -66,9 +67,8 @@ const DefaultLayout = () => {
 					</nav>
 				</div>
 				<div className='flex flex-col gap-1 text-sm text-gray-300'>
-					<div className='flex gap-2 justify-center items-center py-1.5 border border-gray-700 hover:border-gray-600 rounded cursor-pointer hover:text-white'>
-						<span>Theme</span>
-						<Sun size={16} />
+					<div className='flex gap-2 justify-center items-center border border-gray-700 hover:border-gray-600 rounded cursor-pointer text-black dark:text-neutral-100 dark:hover:text-white'>
+						<ModeToggle/>
 					</div>
 					<div onClick={handleLogout} className='flex gap-2 items-center justify-center border border-gray-700 hover:border-gray-600 rounded py-1.5 cursor-pointer hover:text-white'>
 						{isLogin ? (
