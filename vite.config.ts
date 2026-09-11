@@ -7,7 +7,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    // hmr: { host: 'ui.test' },
+    hmr: { host: 'ui.aw-bl.test', protocol: 'ws' },
     host: 'ui.aw-bl.test',
     // host: 'localhost',
     port: 3000,

@@ -40,6 +40,7 @@ const SignIn = () => {
 					setErrors(err.response?.data.errors);
 				}else{
 					setErrors({msg: 'Terjadi kesalahan saat login!'})
+					console.error(err.response?.data.message || err.message);
 				}				
 			} else {
 				throw new Error(`Terjadi kesalahan! ${err}`);
