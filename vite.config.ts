@@ -10,7 +10,7 @@ export default defineConfig({
     hmr: { host: 'ui.aw-bl.test', protocol: 'ws' },
     host: 'ui.aw-bl.test',
     // host: 'localhost',
-    port: 3000,
+    port: 3050,
     open: true
   },
   resolve: {

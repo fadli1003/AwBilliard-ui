@@ -38,6 +38,8 @@ const SignIn = () => {
 					setErrors({ msg: 'Network Error!' });
 				}else if (err.status === 422) {
 					setErrors(err.response?.data.errors);
+				} else if(err.status === 429 ){
+					setErrors({msg: 'Login attempts reach limit. Try again in moment.'})
 				}else{
 					setErrors({msg: 'Terjadi kesalahan saat login!'})
 					console.error(err.response?.data.message || err.message);

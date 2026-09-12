@@ -20,8 +20,8 @@ baseAPI.interceptors.response.use((response: AxiosResponse) => {
 
 }, (error: AxiosError) => {
   if(error.response?.status === 401 || error.response?.status === 419){
-    localStorage.removeItem('aw_user')
-    window.location.href = '/sign-in?message=session_expired'
+    // localStorage.removeItem('aw_user')
+    // window.location.href = '/sign-in?message=session_expired'
   }
 
   // throw error
@@ -52,9 +52,10 @@ export const fetchUser = async(id: number) => {
 
 export const searchUser = async () => {
   const res = await baseAPI.get('/users')
+  return res.data
 }
 
-export const fetchJadwal = async() => {
+export const fetchSchedule = async() => {
   try{
     const res = await baseAPI.get('/schedule')
     return res.data
@@ -66,7 +67,7 @@ export const fetchJadwal = async() => {
   }
 }
 
-export const getUserJadwal = async(userId: number) => {
+export const getUserSchedule = async(userId: number) => {
   try{
     const res = await baseAPI.get(`/users/${userId}/bookings`)
     return res.data
