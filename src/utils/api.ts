@@ -20,8 +20,8 @@ baseAPI.interceptors.response.use((response: AxiosResponse) => {
 
 }, (error: AxiosError) => {
   if(error.response?.status === 401 || error.response?.status === 419){
-    // localStorage.removeItem('aw_user')
-    // window.location.href = '/sign-in?message=session_expired'
+    localStorage.removeItem('aw_user')
+    window.location.href = '/sign-in?message=session_expired'
   }
 
   // throw error

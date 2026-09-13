@@ -4,11 +4,11 @@
 // const data = useMemo(() => generateData(), [])
 
 import Title from "@/components/Title"
-import ScrollToTop from "@/components/ui/ScrollToTop"
+import ScrollToTop from "@/components/ScrollToTop"
 import { baseAPI } from "@/utils/api";
 
 const getRole = async () => {
-  const res = await baseAPI.get('/user-role');
+  const res = await baseAPI.get('/user');
   console.log(res)
   return res?.data
 }
